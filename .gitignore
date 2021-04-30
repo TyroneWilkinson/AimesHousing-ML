@@ -1,0 +1,6 @@
+*.pyc
+*.pyo
+*.py
+__pycache__/
+logs/
+*.log
