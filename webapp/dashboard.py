@@ -1,10 +1,7 @@
 from explainerdashboard import RegressionExplainer, ExplainerDashboard
 import xgboost as xgb
 import pandas as pd
-
-from flask import Flask
-
-app = Flask(__name__)
+import os
 
 feature_descriptions = {
     'MSSubClass': 'Identifies the type of dwelling involved in the sale',
@@ -149,14 +146,9 @@ explainer = RegressionExplainer(REmodel, X, Y,
                                 descriptions=feature_descriptions,
                                 units="$")           
 
-xgb_explainer = ExplainerDashboard(explainer, 
+ExplainerDashboard(explainer, 
                    title='XGBoost Regression Model Explainer: Predicting House Prices',
                    description='This dashboard shows the inner workings of a fitted machine learning model, and explains its predictions.',
                    shap_interaction=False,
-                   decision_trees=False,
-                   server=app)
-                                
-
-@app.route("/")
-def xgb_dashboard():
-    return xgb_explainer.app.index()
+                   decision_trees=False).run(port=int(os.environ.get('PORT',5000)))
+                   
